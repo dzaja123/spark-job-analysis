@@ -8,7 +8,6 @@ This project is designed to perform job analysis using Apache Spark with Docker.
 - [Docker Setup](#docker-setup)
 - [Running the Spark Job](#running-the-spark-job)
 - [Project Structure](#project-structure)
-- [License](#license)
 
 ## Prerequisites
 Make sure you have the following software installed on your machine:
@@ -48,7 +47,7 @@ To download the dataset from Kaggle, you'll need to set up the Kaggle API on you
    ```bash
    git clone https://github.com/dzaja123/spark-job-analysis.git
    ```
-   
+
    ```bash
    cd spark-job-analysis
    ```
