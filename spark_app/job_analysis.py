@@ -1,10 +1,12 @@
 from pyspark.sql import SparkSession
-from transformations import calculate_jobs_per_city, calculate_avg_salary, top_companies
 from pyspark.sql.functions import udf
+from pyspark.sql.types import StringType
+
+from ldjson_to_csv import download_and_convert
+from transformations import calculate_jobs_per_city, calculate_avg_salary, top_companies
+
 from bs4 import BeautifulSoup
 import re
-from pyspark.sql.types import StringType
-from ldjson_to_csv import download_and_convert
 
 
 # UDF to clean HTML tags from job descriptions
