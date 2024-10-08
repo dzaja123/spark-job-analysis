@@ -74,11 +74,12 @@ To download the dataset from Kaggle, you'll need to set up the Kaggle API on you
    ```
 
 ## Project structure
-
-spark-job-analysis/
-│
-├── data/                  # Directory for the Kaggle dataset
-├── job_analysis.py        # Python script for the Spark job
-├── Dockerfile             # Dockerfile for the Spark environment
-├── docker-compose.yml     # Docker Compose configuration file
-└── README.md              # Instructions and documentation
+   ```bash
+    spark-job-analysis/
+    │
+    ├── data/                  # Directory for the Kaggle dataset
+    ├── job_analysis.py        # Python script for the Spark job
+    ├── Dockerfile             # Dockerfile for the Spark environment
+    ├── docker-compose.yml     # Docker Compose configuration file
+    └── README.md              # Instructions and documentation
+   ```
