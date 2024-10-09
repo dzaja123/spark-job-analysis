@@ -75,11 +75,18 @@ To download the dataset from Kaggle, you'll need to set up the Kaggle API on you
 
 ## Project structure
    ```bash
-    spark-job-analysis/
-    │
-    ├── data/                  # Directory for the result CSV files
-    ├── job_analysis.py        # Python script for the Spark job
-    ├── Dockerfile             # Dockerfile for the Spark environment
-    ├── docker-compose.yml     # Docker Compose configuration file
-    └── README.md              # Instructions and documentation
+   spark-job-analysis/
+   │
+   ├── data/                      # Directory for output CSV files
+   ├── spark_app/                 # Main application directory
+   │   ├── job_analysis.py        # Python script for the Spark job
+   │   ├── ldjson_to_csv.py       # Script to convert LDJSON to CSV
+   │   └── transformations.py      # Data transformation functions
+   ├── .env                        # Environment variables for the project
+   ├── .env.spark                  # Environment variables for the Spark environment
+   ├── Dockerfile                  # Dockerfile for setting up the Spark environment
+   ├── docker-compose.yml          # Configuration file for Docker Compose
+   ├── README.md                   # Project documentation and instructions
+   ├── requirements.txt            # Python package dependencies
+   └── .gitignore                  # Files and directories to ignore in Git
    ```
