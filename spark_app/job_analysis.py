@@ -3,18 +3,7 @@ from pyspark.sql.functions import udf
 from pyspark.sql.types import StringType
 
 from ldjson_to_csv import download_and_convert
-from transformations import calculate_jobs_per_city, calculate_avg_salary, top_companies
-
-from bs4 import BeautifulSoup
-import re
-
-
-# UDF to clean HTML tags from job descriptions
-def clean_html(description: str) -> str:
-    if description:
-        soup = BeautifulSoup(description, "html.parser")
-        return re.sub(r'\s+', ' ', soup.get_text()).strip()
-    return description
+from spark_app.analysis_jobs import calculate_jobs_per_city, calculate_avg_salary, top_companies, clean_html
 
 
 def main() -> None:
@@ -40,9 +29,8 @@ def main() -> None:
     df_top_companies = top_companies(df)
 
     # Clean job descriptions
-    # TODO: Add better cleaning logic
     clean_html_udf = udf(clean_html, StringType())
-    df_cleaned = df.withColumn("cleaned_description", clean_html_udf(df['job_description']))
+    df_cleaned = df.withColumn("cleaned_description", clean_html_udf(df['html_job_description']))
 
     # Export results to CSV
     df_jobs_city.write.csv("/opt/bitnami/spark/data/daily_city_jobs", header=True, mode='overwrite')
