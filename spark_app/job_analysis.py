@@ -3,7 +3,7 @@ from pyspark.sql.functions import udf
 from pyspark.sql.types import StringType
 
 from ldjson_to_csv import download_and_convert
-from spark_app.analysis_jobs import calculate_jobs_per_city, calculate_avg_salary, top_companies, clean_html
+from spark_app.helper_functions import calculate_jobs_per_city, calculate_avg_salary, top_companies, clean_html
 
 
 def main() -> None:

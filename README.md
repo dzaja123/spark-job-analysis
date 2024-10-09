@@ -81,7 +81,7 @@ To download the dataset from Kaggle, you'll need to set up the Kaggle API on you
    ├── spark_app/                 # Main application directory
    │   ├── job_analysis.py        # Python script for the Spark job
    │   ├── ldjson_to_csv.py       # Script to convert LDJSON to CSV
-   │   └── transformations.py      # Data transformation functions
+   │   └── helper_functions.py      # Data transformation functions
    ├── .env                        # Environment variables for the project
    ├── .env.spark                  # Environment variables for the Spark environment
    ├── Dockerfile                  # Dockerfile for setting up the Spark environment
