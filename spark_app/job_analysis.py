@@ -1,9 +1,7 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import udf
-from pyspark.sql.types import StringType
 
 from ldjson_to_csv import download_and_convert
-from spark_app.helper_functions import calculate_jobs_per_city, calculate_avg_salary, top_companies, clean_html
+from spark_app.helper_functions import calculate_jobs_per_city, calculate_avg_salary, top_companies, clean_job_descriptions
 
 
 def main() -> None:
@@ -27,16 +25,14 @@ def main() -> None:
     df_jobs_city = calculate_jobs_per_city(df)
     df_avg_salary = calculate_avg_salary(df)
     df_top_companies = top_companies(df)
-
-    # Clean job descriptions
-    clean_html_udf = udf(clean_html, StringType())
-    df_cleaned = df.withColumn("cleaned_description", clean_html_udf(df['html_job_description']))
+    df_cleaned, df_cleaned_only = clean_job_descriptions(df)
 
     # Export results to CSV
-    df_jobs_city.write.csv("/opt/bitnami/spark/data/daily_city_jobs", header=True, mode='overwrite')
-    df_avg_salary.write.csv("/opt/bitnami/spark/data/avg_salary", header=True, mode='overwrite')
-    df_top_companies.write.csv("/opt/bitnami/spark/data/top_companies", header=True, mode='overwrite')
-    df_cleaned.write.csv("/opt/bitnami/spark/data/cleaned_descriptions", header=True, mode='overwrite')
+    df_jobs_city.coalesce(1).write.csv("/opt/bitnami/spark/data/daily_city_jobs", header=True, mode='overwrite')
+    df_avg_salary.coalesce(1).write.csv("/opt/bitnami/spark/data/avg_salary", header=True, mode='overwrite')
+    df_top_companies.coalesce(1).write.csv("/opt/bitnami/spark/data/top_companies", header=True, mode='overwrite')
+    df_cleaned.coalesce(1).write.csv("/opt/bitnami/spark/data/cleaned_descriptions", header=True, mode='overwrite')
+    df_cleaned_only.coalesce(1).write.csv("/opt/bitnami/spark/data/cleaned_descriptions_only", header=True, mode='overwrite')
 
 
 if __name__ == "__main__":

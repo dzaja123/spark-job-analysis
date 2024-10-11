@@ -8,6 +8,7 @@ This project is designed to perform job analysis using Apache Spark with Docker.
 - [Docker Setup](#docker-setup)
 - [Running the Spark Job](#running-the-spark-job)
 - [Project Structure](#project-structure)
+- [UDF performance comment](#udf-performance-comment)
 
 ## Prerequisites
 Make sure you have the following software installed on your machine:
@@ -90,3 +91,19 @@ To download the dataset from Kaggle, you'll need to set up the Kaggle API on you
    ├── requirements.txt            # Python package dependencies
    └── .gitignore                  # Files and directories to ignore in Git
    ```
+
+## UDF performance comment
+
+The UDF (User Defined Function) for cleaning job descriptions using BeautifulSoup has a few performance considerations:
+
+- HTML Parsing Overhead:
+The function uses BeautifulSoup, which can introduce significant overhead, especially with larger HTML documents. Parsing with the default html.parser is slower compared to alternatives like lxml. If the job descriptions are extensive, this could lead to longer execution times.
+
+- Tag Removal Efficiency:
+The current approach to removing non-visible tags involves iterating over a list of tags and calling decompose() for each element found. This method can be inefficient, especially when dealing with large HTML content, as each call to decompose() involves additional processing overhead.
+
+- Regular Expressions Usage:
+The use of regular expressions for whitespace normalization and removing non-printable characters can be CPU-intensive, especially if they are executed multiple times on the same text. Regular expressions are powerful but can become a bottleneck if not optimized.
+
+- Sequential Processing:
+If multiple job descriptions are processed sequentially, the function does not leverage the potential for parallel processing, which could significantly speed up execution for large datasets.

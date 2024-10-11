@@ -11,7 +11,9 @@ ENV SPARK_SSL_ENABLED=no
 # Set working directory
 WORKDIR /opt/bitnami/spark
 
+# Install dependencies
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
+# Set environment variables
 ENV PYTHONPATH=$SPARK_HOME/python/:$PYTHONPATH

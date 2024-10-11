@@ -1,9 +1,9 @@
-from pyspark.sql.functions import col, count, avg, desc
-from pyspark.sql.functions import to_date
+from pyspark.sql.functions import col, count, avg, desc, to_date, udf
+from pyspark.sql.types import FloatType, StringType
 from pyspark.sql import DataFrame
-from pyspark.sql.functions import udf
-from pyspark.sql.types import FloatType
+
 from bs4 import BeautifulSoup
+from typing import Tuple
 
 import re
 import html
@@ -91,31 +91,36 @@ def clean_html(description: str) -> str:
     if not description:
         return ""
     
+    # Check if the description looks like HTML (contains HTML tags)
+    if not re.search(r"<.*?>", description):
+        return description
+
     # Parse the HTML content using BeautifulSoup
     soup = BeautifulSoup(description, "html.parser")
     
     # Remove script, style, and other non-visible elements
-    for element in soup(["script", "style", "head", "meta", "noscript", "iframe", "span"]):
+    non_visible_tags = ["script", "style", "head", "meta", "noscript", "iframe", "span"]
+    for element in soup(non_visible_tags):
         element.decompose()
     
-    # Remove all HTML attributes like dir, style, class, etc.
+    # Remove all HTML attributes in tags for cleaner output
     for tag in soup.find_all(True):
-        tag.attrs = {}
+        tag.attrs.clear()
     
-    # Get the visible text from the soup object, using a space separator for better readability
-    text = soup.get_text(separator=' ')
+    # Extract text content with spaces for readability and decode HTML entities
+    text = html.unescape(soup.get_text(separator=' '))
     
-    # Decode HTML entities (like &amp;, &lt;, etc.)
-    text = html.unescape(text)
-    
-    # Replace multiple spaces, tabs, newlines, and other unwanted characters with a single space
-    cleaned_text = re.sub(r'\s+', ' ', text)
-    
-    # Remove any residual HTML tags, just in case
-    cleaned_text = re.sub(r'<.*?>', '', cleaned_text)
-    
-    # Remove encoded characters and keep printable ASCII characters
+    # Remove extra whitespace and non-printable characters
+    cleaned_text = re.sub(r'\s+', ' ', text).strip()
     cleaned_text = re.sub(r'[^\x20-\x7E]+', ' ', cleaned_text)
+
+    return cleaned_text
+
+
+def clean_job_descriptions(df: DataFrame) -> Tuple[DataFrame, DataFrame]:
+    # Clean job descriptions
+    clean_html_udf = udf(clean_html, StringType())
+    df_cleaned = df.withColumn("cleaned_description", clean_html_udf(df['html_job_description']))
+    df_cleaned_only = df_cleaned.select("cleaned_description")
     
-    # Strip leading and trailing whitespace
-    return cleaned_text.strip()
+    return df_cleaned, df_cleaned_only
