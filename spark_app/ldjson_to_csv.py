@@ -6,8 +6,6 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 
 
 # Note: Kaggle API token must be stored in C:/Users/<username>/.kaggle/kaggle.json
-# The API token can be created here: https://github.com/Kaggle/kaggle-api
-
 # Initialize Kaggle API
 api = KaggleApi()
 api.authenticate()
