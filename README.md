@@ -1,5 +1,4 @@
 # Spark Job Analysis
-
 This project is designed to perform job analysis using Apache Spark with Docker. The analysis is based on a dataset downloaded from Kaggle, and the entire environment is containerized using Docker.
 
 ## Table of Contents
@@ -93,7 +92,6 @@ To download the dataset from Kaggle, you'll need to set up the Kaggle API on you
    ```
 
 ## UDF performance comment
-
 The UDF (User Defined Function) for cleaning job descriptions using BeautifulSoup has a few performance considerations:
 
 - HTML Parsing Overhead:
